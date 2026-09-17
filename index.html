@@ -20,14 +20,21 @@ input[readonly]{background:#f3f3f8}
 .item b{color:var(--navy);display:block}.item span{font-size:12px;color:#555}
 .box{background:var(--row);border-radius:12px;padding:14px;margin-top:8px}
 .db{font-size:15px;font-weight:700;color:var(--navy);word-break:break-all}.nodata{color:var(--miss);font-weight:700}
-a.primary{display:block;text-align:center;text-decoration:none;margin-top:10px;background:var(--navy);color:#fff;border-radius:8px;padding:12px;font-size:15px;font-weight:700}
+a.primary{display:block;text-align:center;text-decoration:none;margin-top:10px;background:var(--navy);color:#fff;border-radius:8px;padding:12px;font-size:16px;font-weight:700}
 .signgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 .signbox{border:1px dashed var(--navy);min-height:90px;border-radius:8px;padding:8px;font-size:12px;color:#555}
-#st{font-size:13px;color:#555}#panel{display:none}
+#st,#st0{font-size:15px;color:#555;font-weight:700}#panel{display:none}
 </style></head><body>
 <header><h1>GPF ADALATH</h1><p>Ananthapuramu and Sri Sathya Sai</p></header>
 <div class="wrap">
-<p id="st">Search your DDO. Staple self-attested xerox of office ID with the printed form.</p>
+<div id="choose">
+<p id="st0">Choose your district</p>
+<a class="primary" href="#" id="btn_atp">Ananthapuramu</a>
+<a class="primary" href="#" id="btn_sss">Sri Sathya Sai (Puttaparthi)</a>
+</div>
+<div id="searchbox" style="display:none">
+<p id="st">Search your DDO.</p>
+<p><a href="#" id="chg" style="color:#231971;font-weight:700">Change district</a></p>
 <label for="q">Search DDO code or office name</label>
 <input id="q" type="search" autocomplete="off" placeholder="Type part of DDO code or office name">
 <p class="hint">Type 2 or more letters. Tap a record to see database details.</p>
@@ -48,21 +55,25 @@ a.primary{display:block;text-align:center;text-decoration:none;margin-top:10px;b
 <a class="primary" id="dl_blank" href="form.html">Download blank mobile and email form</a>
 </div>
 <div class="signgrid"><div><div>Sign</div><div class="signbox">Signature</div></div><div><div>Clear stamp</div><div class="signbox">Office stamp</div></div></div>
-</div>
+</div></div>
 <script>
 const SUPABASE_URL="https://rgmcfonosdomcfsunoxw.supabase.co";
 const SUPABASE_ANON="sb_publishable__5_dRlB4XjY2f3yq_MWEjA_rAZYgRJR";
 const HDR={apikey:SUPABASE_ANON,Authorization:"Bearer "+SUPABASE_ANON};
 const q=document.getElementById("q"),list=document.getElementById("list"),st=document.getElementById("st");
-let timer=null;
+let timer=null, DISTRICT="";
+function pickDist(d){DISTRICT=d;document.getElementById("choose").style.display="none";document.getElementById("searchbox").style.display="block";document.getElementById("panel").style.display="none";st.textContent="District: "+d+". Search your DDO.";q.value="";list.style.display="none";q.focus()}
+document.getElementById("btn_atp").onclick=function(e){e.preventDefault();pickDist("Ananthapuramu")};
+document.getElementById("btn_sss").onclick=function(e){e.preventDefault();pickDist("Sri Sathya Sai")};
+document.getElementById("chg").onclick=function(e){e.preventDefault();DISTRICT="";document.getElementById("choose").style.display="block";document.getElementById("searchbox").style.display="none";document.getElementById("panel").style.display="none"};
 function esc(s){return String(s||"").replace(/&/g,"and").replace(/</g,"")}
 function val(id){return document.getElementById(id).value.trim()}
 function showData(el,v){if(v){el.className="db";el.textContent=v}else{el.className="db nodata";el.textContent="no data is there"}}
 function qs(blank){const p=new URLSearchParams({ddo_id:val("ddo_id"),office:val("office"),district:val("district"),officer:val("officer"),id_no:val("id_no")});if(!blank){p.set("mobile",val("mobile"));p.set("email",val("email"))}return "form.html?"+p.toString()}
 function setDl(){document.getElementById("dl_edit").href=qs(false);document.getElementById("dl_blank").href=qs(true)}
 function fill(r){document.getElementById("panel").style.display="block";document.getElementById("ddo_id").value=r.ddo_id||"";document.getElementById("office").value=r.name||"";document.getElementById("district").value=r.district||"";showData(document.getElementById("db_mobile"),r.mobile);showData(document.getElementById("db_email"),r.email);document.getElementById("mobile").value=r.mobile||"";document.getElementById("email").value=r.email||"";document.getElementById("officer").value="";document.getElementById("id_no").value="";setDl()}
-function showList(rows){if(!rows.length){list.style.display="none";list.innerHTML="";return}list.innerHTML=rows.map(function(r){return "<button type=button class=item><b>"+esc(r.name||r.ddo_id)+"</b><span>"+esc(r.ddo_id)+" | "+esc(r.district)+"</span></button>"}).join("");list.style.display="block";list.querySelectorAll(".item").forEach(function(btn,i){btn.onclick=function(){fill(rows[i]);list.style.display="none";q.value=rows[i].name||rows[i].ddo_id}})}
-function search(term){const t=term.trim();if(t.length<2){list.style.display="none";return}const like="*"+t.replace(/,/g,"")+"*";fetch(SUPABASE_URL+"/rest/v1/ddos?or=(name.ilike."+encodeURIComponent(like)+",ddo_id.ilike."+encodeURIComponent(like)+")&select=ddo_id,name,mobile,email,district&limit=12",{headers:HDR}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows)){st.textContent="Database not ready.";return}showList(rows)}).catch(function(){st.textContent="Could not search. Use mobile data."})}
+function showList(rows){if(!rows.length){list.style.display="none";list.innerHTML="";st.textContent="No DDO found in this district.";return}st.textContent="District: "+DISTRICT+". "+rows.length+" match(es).";list.innerHTML=rows.map(function(r){return "<button type=button class=item><b>"+esc(r.name||r.ddo_id)+"</b><span>"+esc(r.ddo_id)+" | "+esc(r.district)+"</span></button>"}).join("");list.style.display="block";list.querySelectorAll(".item").forEach(function(btn,i){btn.onclick=function(){fill(rows[i]);list.style.display="none";q.value=rows[i].name||rows[i].ddo_id}})}
+function search(term){const t=term.trim();if(t.length<2||!DISTRICT){list.style.display="none";return}const like="*"+t.replace(/,/g,"")+"*";fetch(SUPABASE_URL+"/rest/v1/ddos?district=eq."+encodeURIComponent(DISTRICT)+"&or=(name.ilike."+encodeURIComponent(like)+",ddo_id.ilike."+encodeURIComponent(like)+")&select=ddo_id,name,mobile,email,district&limit=20",{headers:HDR}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows)){st.textContent="Database not ready.";return}showList(rows)}).catch(function(){st.textContent="Could not search. Use mobile data."})}
 q.addEventListener("input",function(){clearTimeout(timer);timer=setTimeout(function(){search(q.value)},200)});
 ["mobile","email","officer","id_no"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){if(id==="officer"||id==="id_no")this.value=this.value.toUpperCase();setDl()})});
 </script></body></html>
