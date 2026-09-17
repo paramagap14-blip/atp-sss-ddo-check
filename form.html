@@ -17,23 +17,23 @@
 .foot{background:var(--navy);color:#fff;text-align:center;padding:8px;font-size:11px;margin-top:20px}
 @media print{.actions{display:none}}
 </style></head><body>
-<div class="bar"><h1>GPF ADALATH</h1><p>O/o the Principal Accountant General (A&E), Andhra Pradesh</p><p>Ananthapuramu and Sri Sathya Sai Districts</p></div>
+<div class="bar"><h1>GPF ADALATH</h1><p>O/o the Principal Accountant General (A&amp;E), Andhra Pradesh</p><p>Ananthapuramu and Sri Sathya Sai Districts</p></div>
 <div class="page">
 <h2>DDO CONTACT PARTICULARS</h2>
-<p class="note">Fill in capital letters. Print this form, sign, affix clear office stamp, and submit.</p>
+<p class="note">Print this form, sign, affix clear office stamp, and submit.</p>
 <div class="f"><span>1. District</span><div class="line" id="district"></div></div>
 <div class="f"><span>2. DDO code (TRY ID)</span><div class="line" id="ddo_id"></div></div>
-<div class="f"><span>3. DDO / office name</span><div class="line" id="name"></div></div>
+<div class="f"><span>3. Office name</span><div class="line" id="office"></div></div>
 <div class="two"><div class="f"><span>4. Mobile number</span><div class="line" id="mobile"></div></div><div class="f"><span>5. Email address</span><div class="line" id="email"></div></div></div>
 <p class="decl">I hereby furnish / update the above mobile number and email for GPF communication. The particulars are correct to the best of my knowledge.</p>
-<div class="f"><span>DDO NAME (BLOCK LETTERS)</span><div class="line" id="block" style="min-height:36px;letter-spacing:.08em"></div></div>
+<div class="f"><span>DDO NAME / OFFICER NAME (BLOCK LETTERS)</span><div class="line" id="officer" style="min-height:36px;letter-spacing:.08em"></div></div>
 <div class="sign"><div><span style="color:var(--navy);font-weight:700;font-size:12px">SIGN</span><div class="box">Signature</div></div><div><span style="color:var(--navy);font-weight:700;font-size:12px">CLEAR STAMP</span><div class="box">Office stamp</div></div></div>
 <div class="meta"><div>Place: ______________________</div><div>Date: ______________________</div></div>
 <div class="actions"><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
 </div>
-<div class="foot">PAG (A&E), Andhra Pradesh | GPF Adalath | Submit the signed and stamped copy</div>
+<div class="foot">PAG (A&amp;E), Andhra Pradesh | GPF Adalath | Submit the signed and stamped copy</div>
 <script>
 const p=new URLSearchParams(location.search);
 function set(id,v){document.getElementById(id).textContent=(v||"").toUpperCase()}
-set("district",p.get("district"));set("ddo_id",p.get("ddo_id"));set("name",p.get("name"));set("mobile","");set("email","");set("block",p.get("block")||p.get("name"));
+set("district",p.get("district"));set("ddo_id",p.get("ddo_id"));set("office",p.get("office")||p.get("name"));set("mobile",p.get("mobile"));set("email",p.get("email"));set("officer",p.get("officer")||p.get("block"));
 </script></body></html>
