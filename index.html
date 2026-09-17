@@ -19,7 +19,8 @@ input,select{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--
 .item b{color:var(--navy);display:block}.item span{font-size:12px;color:#555}
 .box{background:var(--row);border-radius:12px;padding:14px;margin-top:8px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:12px;font-size:16px;font-weight:700}
+button.primary,a.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:12px;font-size:16px;font-weight:700;display:block;text-align:center;text-decoration:none}
+a.primary{margin-top:8px}
 #msg{margin-top:10px;font-weight:700;min-height:1.2em}.ok{color:#0a7a32}.err{color:var(--miss)}
 .sign{margin-top:22px;border-top:1px solid var(--navy);padding-top:14px}
 .sign .name{text-transform:uppercase;letter-spacing:.06em;font-weight:700;font-size:16px}
@@ -29,10 +30,10 @@ button.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;bord
 </style></head><body>
 <header><h1>GPF ADALATH</h1><p>Ananthapuramu and Sri Sathya Sai - Add / update DDO contact</p></header>
 <div class="wrap">
-<p id="st">Search your DDO, then add or update mobile and email.</p>
+<p id="st">Search your DDO, then download the physical form, sign and stamp.</p>
 <label for="q">Search DDO code or office name</label>
 <input id="q" type="search" autocomplete="off" placeholder="Type part of DDO code or name">
-<p class="hint">Type 2 or more letters. Tap a name to fill the form.</p>
+<p class="hint">Type 2 or more letters. Tap a name, then download the form.</p>
 <div id="list"></div>
 <form id="f" class="box" autocomplete="off">
 <label for="ddo_id">DDO code (TRY ID)</label><input id="ddo_id" required>
@@ -41,7 +42,7 @@ button.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;bord
 <select id="district"><option>Ananthapuramu</option><option>Sri Sathya Sai</option></select>
 <div class="row2"><div><label for="mobile">Mobile number</label><input id="mobile" inputmode="numeric" maxlength="15"></div>
 <div><label for="email">Email</label><input id="email" type="email"></div></div>
-<button class="primary" type="submit">Save / update</button>
+<a class="primary" id="dl" href="form.html">Download / print physical form</a>
 <p id="msg"></p>
 </form>
 <div class="sign">
@@ -55,14 +56,14 @@ button.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;bord
 const SUPABASE_URL="https://rgmcfonosdomcfsunoxw.supabase.co";
 const SUPABASE_ANON="sb_publishable__5_dRlB4XjY2f3yq_MWEjA_rAZYgRJR";
 const HDR={apikey:SUPABASE_ANON,Authorization:"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"};
-const q=document.getElementById("q"),list=document.getElementById("list"),msg=document.getElementById("msg"),st=document.getElementById("st");
+const q=document.getElementById("q"),list=document.getElementById("list"),st=document.getElementById("st");
 let timer=null;
 function esc(s){return String(s||"").replace(/&/g,"and").replace(/</g,"")}
 function val(id){return document.getElementById(id).value.trim()}
-function fill(r){document.getElementById("ddo_id").value=r.ddo_id||"";document.getElementById("name").value=r.name||"";document.getElementById("mobile").value=r.mobile||"";document.getElementById("email").value=r.email||"";document.getElementById("district").value=r.district==="Sri Sathya Sai"?"Sri Sathya Sai":"Ananthapuramu";document.getElementById("block_name").value=(r.name||"").toUpperCase()}
+function setDl(){const p=new URLSearchParams({ddo_id:val("ddo_id"),name:val("name"),mobile:val("mobile"),email:val("email"),district:val("district"),block:val("block_name")});document.getElementById("dl").href="form.html?"+p.toString()}
+function fill(r){document.getElementById("ddo_id").value=r.ddo_id||"";document.getElementById("name").value=r.name||"";document.getElementById("mobile").value=r.mobile||"";document.getElementById("email").value=r.email||"";document.getElementById("district").value=r.district==="Sri Sathya Sai"?"Sri Sathya Sai":"Ananthapuramu";document.getElementById("block_name").value=(r.name||"").toUpperCase();setDl()}
 function showList(rows){if(!rows.length){list.style.display="none";list.innerHTML="";return}list.innerHTML=rows.map(function(r){return "<button type=button class=item><b>"+esc(r.name||r.ddo_id)+"</b><span>"+esc(r.ddo_id)+" | "+esc(r.district)+"</span></button>"}).join("");list.style.display="block";list.querySelectorAll(".item").forEach(function(btn,i){btn.onclick=function(){fill(rows[i]);list.style.display="none";q.value=rows[i].name||rows[i].ddo_id}})}
-function search(term){const t=term.trim();if(t.length<2){list.style.display="none";return}const like="*"+t.replace(/,/g,"")+"*";fetch(SUPABASE_URL+"/rest/v1/ddos?or=(name.ilike."+encodeURIComponent(like)+",ddo_id.ilike."+encodeURIComponent(like)+")&select=ddo_id,name,mobile,email,district&limit=12",{headers:HDR}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows)){st.textContent="Database not ready. Run SQL in Supabase.";return}showList(rows)}).catch(function(){st.textContent="Could not search. Use mobile data."})}
+function search(term){const t=term.trim();if(t.length<2){list.style.display="none";return}const like="*"+t.replace(/,/g,"")+"*";fetch(SUPABASE_URL+"/rest/v1/ddos?or=(name.ilike."+encodeURIComponent(like)+",ddo_id.ilike."+encodeURIComponent(like)+")&select=ddo_id,name,mobile,email,district&limit=12",{headers:HDR}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows)){st.textContent="Database not ready.";return}showList(rows)}).catch(function(){st.textContent="Could not search. Use mobile data."})}
 q.addEventListener("input",function(){clearTimeout(timer);timer=setTimeout(function(){search(q.value)},200)});
-document.getElementById("name").addEventListener("input",function(){document.getElementById("block_name").value=this.value.toUpperCase()});
-document.getElementById("f").addEventListener("submit",function(ev){ev.preventDefault();msg.className="";msg.textContent="Saving...";const row={ddo_id:val("ddo_id"),name:val("name"),mobile:val("mobile"),email:val("email"),district:val("district")};if(!row.ddo_id||!row.name){msg.className="err";msg.textContent="DDO code and name are required.";return}fetch(SUPABASE_URL+"/rest/v1/ddos?on_conflict=ddo_id",{method:"POST",headers:Object.assign({},HDR,{Prefer:"resolution=merge-duplicates,return=representation"}),body:JSON.stringify(row)}).then(function(r){return r.json().then(function(j){return {ok:r.ok}})}).then(function(res){if(!res.ok){msg.className="err";msg.textContent="Save failed. Run the SQL in Supabase.";return}msg.className="ok";msg.textContent="Saved. Mobile and email updated.";document.getElementById("block_name").value=row.name.toUpperCase()}).catch(function(){msg.className="err";msg.textContent="Save failed. Use mobile data."})});
+["name","ddo_id","mobile","email","district","block_name"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){if(id==="name")document.getElementById("block_name").value=this.value.toUpperCase();setDl()})});
 </script></body></html>
