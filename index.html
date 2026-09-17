@@ -29,7 +29,7 @@ footer{padding:8px 16px 24px;font-size:12px;color:#777}#st{font-size:13px;color:
 </div>
 <footer>If mobile or email is missing, furnish official contact to AG office.</footer>
 <script>
-const FILES=["e0.json","e1.json","e2.json","e15.json"];
+const FILES=["e0.json","e1.json","e2.json","e3.json","e4.json","e5.json","e6.json","e7.json","e8.json","e9.json","e10.json","e11.json","e12.json","e13.json","e14.json","e15.json"];
 let DATA=[];
 const q=document.getElementById("q");
 const list=document.getElementById("list");
@@ -41,6 +41,6 @@ function search(term){const t=norm(term);if(t.length<2)return[];const out=[];for
 function showList(rows){if(!rows.length){list.style.display="none";list.innerHTML="";return}list.innerHTML=rows.map(r=>"<button type=button class=item><b>"+esc(r.n||r.i)+"</b><span>"+esc(r.i)+" | "+esc(r.d)+"</span></button>").join("");list.style.display="block";list.querySelectorAll(".item").forEach((btn,i)=>{btn.onclick=function(){pick(rows[i])}})}
 function pick(r){q.value=r.n||r.i;list.style.display="none";card.style.display="block";card.innerHTML="<h2>"+esc(r.n||r.i)+"</h2><div class=k>District</div><div class=v>"+esc(r.d)+"</div><div class=k>DDO code</div><div class=v>"+esc(r.i)+"</div><div class=k>Mobile</div><div class=v>"+(r.m?esc(r.m):"<span class=miss>Not available</span>")+"</div><div class=k>Email</div><div class=v>"+(r.e?esc(r.e):"<span class=miss>Not available</span>")+"</div>"}
 q.addEventListener("input",function(){card.style.display="none";showList(search(q.value))});
-function loadOne(f){return new Promise(function(resolve){var done=false;var t=setTimeout(function(){if(!done){done=true;resolve([])}},4000);fetch(f).then(function(r){return r.ok?r.json():[]}).then(function(j){if(!done){done=true;clearTimeout(t);resolve(j||[])}}).catch(function(){if(!done){done=true;clearTimeout(t);resolve([])}})})}
-(async function(){for(var i=0;i<FILES.length;i++){var part=await loadOne(FILES[i]);if(part&&part.length){DATA=DATA.concat(part);st.textContent=DATA.length+" DDOs loaded. You can type now.";q.disabled=false;if(i===0)q.focus()}}if(!DATA.length)st.textContent="Could not load DDO list. Use the hall laptop.";else st.textContent=DATA.length+" DDOs loaded. Type to search.";})();
+function loadOne(f){return new Promise(function(resolve){var done=false;var t=setTimeout(function(){if(!done){done=true;resolve([])}},5000);fetch(f).then(function(r){return r.ok?r.json():[]}).then(function(j){if(!done){done=true;clearTimeout(t);resolve(j||[])}}).catch(function(){if(!done){done=true;clearTimeout(t);resolve([])}})})}
+(async function(){for(var i=0;i<FILES.length;i++){var part=await loadOne(FILES[i]);if(part&&part.length){DATA=DATA.concat(part);st.textContent=DATA.length+" of 1213 DDOs loaded. You can type now.";q.disabled=false;if(DATA.length&&q.disabled===false&&i===0)q.focus()}}if(!DATA.length)st.textContent="Could not load DDO list.";else st.textContent=DATA.length+" DDOs loaded. Type to search.";})();
 </script></body></html>
