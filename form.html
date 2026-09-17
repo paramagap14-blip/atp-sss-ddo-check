@@ -12,7 +12,7 @@
 .line{border:1px solid var(--navy);min-height:28px;padding:6px 8px;font-size:15px;text-transform:uppercase}
 .linein{width:100%;border:1px solid var(--navy);min-height:28px;padding:6px 8px;font-size:15px;text-transform:uppercase;font-family:inherit}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.decl{font-size:13px;margin:18px 0}
-.sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.box{border:1px solid var(--navy);height:100px;padding:6px;font-size:12px;color:var(--navy)}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.box{border:1px solid var(--navy);height:90px;padding:6px;font-size:12px;color:var(--navy)}
 .meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;font-size:13px}
 .actions{text-align:center;margin:16px 0}.actions button{background:var(--navy);color:#fff;border:0;padding:10px 18px;font-size:15px}
 .foot{background:var(--navy);color:#fff;text-align:center;padding:8px;font-size:11px;margin-top:20px}
@@ -21,13 +21,15 @@
 <div class="bar"><h1>GPF ADALATH</h1><p>O/o the Principal Accountant General (A&amp;E), Andhra Pradesh</p><p>Ananthapuramu and Sri Sathya Sai Districts</p></div>
 <div class="page">
 <h2>DDO CONTACT PARTICULARS</h2>
-<p class="note">Print this form, sign, affix clear office stamp, and submit.</p>
+<p class="note">Print this form, sign, affix clear office stamp, attach office identity card, and submit.</p>
 <div class="f"><span>1. District</span><div class="line" id="district"></div></div>
 <div class="f"><span>2. DDO code (TRY ID)</span><div class="line" id="ddo_id"></div></div>
 <div class="f"><span>3. Office name</span><div class="line" id="office"></div></div>
 <div class="two"><div class="f"><span>4. Mobile number</span><input class="linein" id="mobile"></div><div class="f"><span>5. Email address</span><input class="linein" id="email"></div></div>
 <p class="decl">I hereby furnish / update the above mobile number and email for GPF communication. The particulars are correct to the best of my knowledge.</p>
 <div class="f"><span>DDO NAME / OFFICER NAME (BLOCK LETTERS)</span><input class="linein" id="officer" placeholder="TYPE OFFICER NAME"></div>
+<div class="f"><span>6. Office identity card number</span><input class="linein" id="id_no" placeholder="OFFICE ID NUMBER"></div>
+<div class="f"><span>7. Attach office identity card (photocopy)</span><div class="box">Paste / staple office identity card here</div></div>
 <div class="sign"><div><span style="color:var(--navy);font-weight:700;font-size:12px">SIGN</span><div class="box">Signature</div></div><div><span style="color:var(--navy);font-weight:700;font-size:12px">CLEAR STAMP</span><div class="box">Office stamp</div></div></div>
 <div class="meta"><div>Place: ______________________</div><div>Date: ______________________</div></div>
 <div class="actions"><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
@@ -38,6 +40,7 @@ const p=new URLSearchParams(location.search);
 function setText(id,v){document.getElementById(id).textContent=(v||"").toUpperCase()}
 function setVal(id,v){document.getElementById(id).value=(v||"").toUpperCase()}
 setText("district",p.get("district"));setText("ddo_id",p.get("ddo_id"));setText("office",p.get("office")||p.get("name"));
-setVal("mobile",p.get("mobile"));setVal("email",p.get("email"));setVal("officer",p.get("officer")||p.get("block"));
+setVal("mobile",p.get("mobile"));setVal("email",p.get("email"));setVal("officer",p.get("officer")||p.get("block"));setVal("id_no",p.get("id_no"));
 document.getElementById("officer").addEventListener("input",function(){this.value=this.value.toUpperCase()});
+document.getElementById("id_no").addEventListener("input",function(){this.value=this.value.toUpperCase()});
 </script></body></html>
