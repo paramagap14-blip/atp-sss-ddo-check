@@ -18,29 +18,28 @@
 .foot{background:var(--navy);color:#fff;text-align:center;padding:8px;font-size:11px;margin-top:20px}
 @media print{.actions{display:none}}
 </style></head><body>
-<div class="bar"><h1>GPF ADALATH</h1><p>O/o the Principal Accountant General (A&amp;E), Andhra Pradesh</p><p>Ananthapuramu and Sri Sathya Sai Districts</p></div>
+<div class="bar"><h1>GPF ADALATH</h1><p>Ananthapuramu and Sri Sathya Sai Districts</p></div>
 <div class="page">
 <h2>DDO CONTACT PARTICULARS</h2>
 <p class="note">Print this form, sign, affix clear office stamp, and submit.</p>
 <div class="f"><span>1. District</span><div class="line" id="district"></div></div>
 <div class="f"><span>2. DDO code (TRY ID)</span><div class="line" id="ddo_id"></div></div>
-<div class="f"><span>3. Office name</span><div class="line" id="office"></div></div>
-<div class="f"><span>4. Mobile number</span><input class="linein" id="mobile"></div>
-<div class="f"><span>5. Email address</span><input class="linein" id="email"></div>
+<div class="f"><span>3. Mobile number</span><input class="linein" id="mobile"></div>
+<div class="f"><span>4. Email address</span><input class="linein" id="email"></div>
 <p class="decl">I hereby furnish / update the above mobile number and email for GPF communication. The particulars are correct to the best of my knowledge.</p>
 <div class="f"><span>DDO NAME / OFFICER NAME (BLOCK LETTERS)</span><input class="linein" id="officer" placeholder="TYPE OFFICER NAME"></div>
-<div class="f"><span>6. Office identity card number</span><input class="linein" id="id_no" placeholder="OFFICE ID NUMBER"></div>
+<div class="f"><span>5. Office identity card number</span><input class="linein" id="id_no" placeholder="OFFICE ID NUMBER"></div>
 <div class="sign"><div><span style="color:var(--navy);font-weight:700;font-size:12px">SIGN</span><div class="box">Signature</div></div><div><span style="color:var(--navy);font-weight:700;font-size:12px">CLEAR STAMP</span><div class="box">Office stamp</div></div></div>
 <div class="meta"><div>Place: ______________________</div><div>Date: ______________________</div></div>
 <p class="decl"><b>Enclose self-attested xerox of office identity card along with this form.</b></p>
 <div class="actions"><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
 </div>
-<div class="foot">PAG (A&amp;E), Andhra Pradesh | GPF Adalath | Submit the signed and stamped copy</div>
+<div class="foot">GPF Adalath | Submit the signed and stamped copy</div>
 <script>
 const p=new URLSearchParams(location.search);
 function setText(id,v){document.getElementById(id).textContent=(v||"").toUpperCase()}
 function setVal(id,v){document.getElementById(id).value=(v||"").toUpperCase()}
-setText("district",p.get("district"));setText("ddo_id",p.get("ddo_id"));setText("office",p.get("office")||p.get("name"));
+setText("district",p.get("district"));setText("ddo_id",p.get("ddo_id"));
 setVal("mobile",p.get("mobile"));setVal("email",p.get("email"));setVal("officer",p.get("officer")||p.get("block"));setVal("id_no",p.get("id_no"));
 document.getElementById("officer").addEventListener("input",function(){this.value=this.value.toUpperCase()});
 document.getElementById("id_no").addEventListener("input",function(){this.value=this.value.toUpperCase()});
