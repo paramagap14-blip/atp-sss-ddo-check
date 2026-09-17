@@ -12,56 +12,57 @@ header h1{margin:0;font-size:22px;letter-spacing:.08em}
 header p{margin:6px 0 0;font-size:13px;opacity:.95}
 .wrap{padding:16px;max-width:640px;margin:0 auto}
 label{display:block;font-weight:700;color:var(--navy);margin:10px 0 6px;font-size:14px}
-input,select{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--navy);border-radius:8px}
-.hint{font-size:13px;color:#555;margin:6px 0 10px}
+input{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--navy);border-radius:8px}
+input[readonly]{background:#f3f3f8;color:#333}
+#q{border-width:2px}.hint{font-size:13px;color:#555;margin:6px 0 10px}
 #list{border:1px solid var(--line);border-radius:10px;overflow:hidden;display:none;margin-bottom:12px}
 .item{display:block;width:100%;text-align:left;border:0;background:#fff;padding:12px;border-bottom:1px solid #eee;font-size:14px}
 .item b{color:var(--navy);display:block}.item span{font-size:12px;color:#555}
 .box{background:var(--row);border-radius:12px;padding:14px;margin-top:8px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button.primary,a.primary{width:100%;margin-top:14px;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:12px;font-size:16px;font-weight:700;display:block;text-align:center;text-decoration:none}
-a.primary{margin-top:8px}
-.sign{margin-top:22px;border-top:1px solid var(--navy);padding-top:14px}
-.sign .name{text-transform:uppercase;letter-spacing:.06em;font-weight:700;font-size:16px}
+.db{font-size:15px;font-weight:700;color:var(--navy);min-height:1.3em}
+.nodata{color:var(--miss);font-weight:700}
+a.primary{display:block;text-align:center;text-decoration:none;margin-top:10px;background:var(--navy);color:#fff;border-radius:8px;padding:12px;font-size:15px;font-weight:700}
 .signgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 .signbox{border:1px dashed var(--navy);min-height:90px;border-radius:8px;padding:8px;font-size:12px;color:#555}
-#st{font-size:13px;color:#555}
+#st{font-size:13px;color:#555}#panel{display:none}
 </style></head><body>
-<header><h1>GPF ADALATH</h1><p>Ananthapuramu and Sri Sathya Sai - Add / update DDO contact</p></header>
+<header><h1>GPF ADALATH</h1><p>Ananthapuramu and Sri Sathya Sai</p></header>
 <div class="wrap">
-<p id="st">Search your DDO, then download the physical form, sign and stamp.</p>
+<p id="st">Search your DDO. Only mobile and email can be changed for print.</p>
 <label for="q">Search DDO code or office name</label>
-<input id="q" type="search" autocomplete="off" placeholder="Type part of DDO code or name">
-<p class="hint">Type 2 or more letters. Tap a name, then download the form. Mobile and email stay blank to fill by hand.</p>
+<input id="q" type="search" autocomplete="off" placeholder="Type part of DDO code or office name">
+<p class="hint">Type 2 or more letters. Tap a record to see database details.</p>
 <div id="list"></div>
-<form id="f" class="box" autocomplete="off">
-<label for="ddo_id">DDO code (TRY ID)</label><input id="ddo_id" required>
-<label for="name">DDO / office name</label><input id="name" required>
-<label for="district">District</label>
-<select id="district"><option>Ananthapuramu</option><option>Sri Sathya Sai</option></select>
-<div class="row2"><div><label for="mobile">Mobile number</label><input id="mobile" inputmode="numeric" maxlength="15" placeholder="Leave blank. Write on printed form."></div>
-<div><label for="email">Email</label><input id="email" type="email" placeholder="Leave blank. Write on printed form."></div></div>
-<a class="primary" id="dl" href="form.html">Download / print physical form</a>
-</form>
-<div class="sign">
-<label for="block_name">DDO name (block letters)</label>
-<input id="block_name" class="name" placeholder="NAME IN BLOCK LETTERS">
-<div class="signgrid">
-<div><div>Sign</div><div class="signbox">Signature</div></div>
-<div><div>Clear stamp</div><div class="signbox">Office stamp</div></div>
-</div></div></div>
+<div id="panel" class="box">
+<label>DDO code (TRY ID)</label><input id="ddo_id" readonly>
+<label>Office name</label><input id="office" readonly>
+<label>District</label><input id="district" readonly>
+<div class="row2"><div><label>Mobile in database</label><div class="db" id="db_mobile"></div></div>
+<div><label>Email in database</label><div class="db" id="db_email"></div></div></div>
+<div class="row2"><div><label for="mobile">Mobile number (you may change)</label><input id="mobile" inputmode="numeric" maxlength="15"></div>
+<div><label for="email">Email (you may change)</label><input id="email" type="email"></div></div>
+<label for="officer">DDO name / officer name (block letters)</label>
+<input id="officer" placeholder="OFFICER NAME IN BLOCK LETTERS">
+<a class="primary" id="dl_edit" href="form.html">Download edited form</a>
+<a class="primary" id="dl_blank" href="form.html">Download blank mobile and email form</a>
+</div>
+<div class="signgrid"><div><div>Sign</div><div class="signbox">Signature</div></div><div><div>Clear stamp</div><div class="signbox">Office stamp</div></div></div>
+</div>
 <script>
 const SUPABASE_URL="https://rgmcfonosdomcfsunoxw.supabase.co";
 const SUPABASE_ANON="sb_publishable__5_dRlB4XjY2f3yq_MWEjA_rAZYgRJR";
-const HDR={apikey:SUPABASE_ANON,Authorization:"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"};
+const HDR={apikey:SUPABASE_ANON,Authorization:"Bearer "+SUPABASE_ANON};
 const q=document.getElementById("q"),list=document.getElementById("list"),st=document.getElementById("st");
 let timer=null;
 function esc(s){return String(s||"").replace(/&/g,"and").replace(/</g,"")}
 function val(id){return document.getElementById(id).value.trim()}
-function setDl(){const p=new URLSearchParams({ddo_id:val("ddo_id"),name:val("name"),district:val("district"),block:val("block_name")});document.getElementById("dl").href="form.html?"+p.toString()}
-function fill(r){document.getElementById("ddo_id").value=r.ddo_id||"";document.getElementById("name").value=r.name||"";document.getElementById("mobile").value="";document.getElementById("email").value="";document.getElementById("district").value=r.district==="Sri Sathya Sai"?"Sri Sathya Sai":"Ananthapuramu";document.getElementById("block_name").value=(r.name||"").toUpperCase();setDl()}
+function showData(el,v){if(v){el.className="db";el.textContent=v}else{el.className="db nodata";el.textContent="no data is there"}}
+function qs(blank){const p=new URLSearchParams({ddo_id:val("ddo_id"),office:val("office"),district:val("district"),officer:val("officer")});if(!blank){p.set("mobile",val("mobile"));p.set("email",val("email"))}return "form.html?"+p.toString()}
+function setDl(){document.getElementById("dl_edit").href=qs(false);document.getElementById("dl_blank").href=qs(true)}
+function fill(r){document.getElementById("panel").style.display="block";document.getElementById("ddo_id").value=r.ddo_id||"";document.getElementById("office").value=r.name||"";document.getElementById("district").value=r.district||"";showData(document.getElementById("db_mobile"),r.mobile);showData(document.getElementById("db_email"),r.email);document.getElementById("mobile").value=r.mobile||"";document.getElementById("email").value=r.email||"";document.getElementById("officer").value="";setDl()}
 function showList(rows){if(!rows.length){list.style.display="none";list.innerHTML="";return}list.innerHTML=rows.map(function(r){return "<button type=button class=item><b>"+esc(r.name||r.ddo_id)+"</b><span>"+esc(r.ddo_id)+" | "+esc(r.district)+"</span></button>"}).join("");list.style.display="block";list.querySelectorAll(".item").forEach(function(btn,i){btn.onclick=function(){fill(rows[i]);list.style.display="none";q.value=rows[i].name||rows[i].ddo_id}})}
 function search(term){const t=term.trim();if(t.length<2){list.style.display="none";return}const like="*"+t.replace(/,/g,"")+"*";fetch(SUPABASE_URL+"/rest/v1/ddos?or=(name.ilike."+encodeURIComponent(like)+",ddo_id.ilike."+encodeURIComponent(like)+")&select=ddo_id,name,mobile,email,district&limit=12",{headers:HDR}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows)){st.textContent="Database not ready.";return}showList(rows)}).catch(function(){st.textContent="Could not search. Use mobile data."})}
 q.addEventListener("input",function(){clearTimeout(timer);timer=setTimeout(function(){search(q.value)},200)});
-["name","ddo_id","district","block_name"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){if(id==="name")document.getElementById("block_name").value=this.value.toUpperCase();setDl()})});
+["mobile","email","officer"].forEach(function(id){document.getElementById(id).addEventListener("input",function(){if(id==="officer")this.value=this.value.toUpperCase();setDl()})});
 </script></body></html>
