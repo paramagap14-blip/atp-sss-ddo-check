@@ -10,6 +10,7 @@
 .page{max-width:800px;margin:0 auto;padding:16px}h2{text-align:center;color:var(--navy);margin:16px 0 6px;font-size:16px}
 .note{text-align:center;font-size:12px;margin:0 0 16px}.f{margin:12px 0}.f span{display:block;color:var(--navy);font-weight:700;font-size:12px;margin-bottom:4px}
 .line{border:1px solid var(--navy);min-height:28px;padding:6px 8px;font-size:15px;text-transform:uppercase}
+.linein{width:100%;border:1px solid var(--navy);min-height:28px;padding:6px 8px;font-size:15px;text-transform:uppercase;font-family:inherit}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.decl{font-size:13px;margin:18px 0}
 .sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}.box{border:1px solid var(--navy);height:100px;padding:6px;font-size:12px;color:var(--navy)}
 .meta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;font-size:13px}
@@ -24,9 +25,9 @@
 <div class="f"><span>1. District</span><div class="line" id="district"></div></div>
 <div class="f"><span>2. DDO code (TRY ID)</span><div class="line" id="ddo_id"></div></div>
 <div class="f"><span>3. Office name</span><div class="line" id="office"></div></div>
-<div class="two"><div class="f"><span>4. Mobile number</span><div class="line" id="mobile"></div></div><div class="f"><span>5. Email address</span><div class="line" id="email"></div></div></div>
+<div class="two"><div class="f"><span>4. Mobile number</span><input class="linein" id="mobile"></div><div class="f"><span>5. Email address</span><input class="linein" id="email"></div></div>
 <p class="decl">I hereby furnish / update the above mobile number and email for GPF communication. The particulars are correct to the best of my knowledge.</p>
-<div class="f"><span>DDO NAME / OFFICER NAME (BLOCK LETTERS)</span><div class="line" id="officer" style="min-height:36px;letter-spacing:.08em"></div></div>
+<div class="f"><span>DDO NAME / OFFICER NAME (BLOCK LETTERS)</span><input class="linein" id="officer" placeholder="TYPE OFFICER NAME"></div>
 <div class="sign"><div><span style="color:var(--navy);font-weight:700;font-size:12px">SIGN</span><div class="box">Signature</div></div><div><span style="color:var(--navy);font-weight:700;font-size:12px">CLEAR STAMP</span><div class="box">Office stamp</div></div></div>
 <div class="meta"><div>Place: ______________________</div><div>Date: ______________________</div></div>
 <div class="actions"><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
@@ -34,6 +35,9 @@
 <div class="foot">PAG (A&amp;E), Andhra Pradesh | GPF Adalath | Submit the signed and stamped copy</div>
 <script>
 const p=new URLSearchParams(location.search);
-function set(id,v){document.getElementById(id).textContent=(v||"").toUpperCase()}
-set("district",p.get("district"));set("ddo_id",p.get("ddo_id"));set("office",p.get("office")||p.get("name"));set("mobile",p.get("mobile"));set("email",p.get("email"));set("officer",p.get("officer")||p.get("block"));
+function setText(id,v){document.getElementById(id).textContent=(v||"").toUpperCase()}
+function setVal(id,v){document.getElementById(id).value=(v||"").toUpperCase()}
+setText("district",p.get("district"));setText("ddo_id",p.get("ddo_id"));setText("office",p.get("office")||p.get("name"));
+setVal("mobile",p.get("mobile"));setVal("email",p.get("email"));setVal("officer",p.get("officer")||p.get("block"));
+document.getElementById("officer").addEventListener("input",function(){this.value=this.value.toUpperCase()});
 </script></body></html>
